@@ -1,6 +1,6 @@
 # The Saffron Table — AI Restaurant Chatbot 🍽️
 
-**An intelligent, RAG-powered chatbot for "The Saffron Table" restaurant, capable of answering customer queries using knowledge stored in Supabase.**
+**An intelligent, RAG-powered chatbot for "The Saffron Table" restaurant, capable of answering customer queries using knowledge stored in postgres.**
 
 * **Live Website:** [The Saffron Table](https://the-saffron-table.netlify.app/)
 
@@ -8,16 +8,17 @@
 
 ## 📖 Overview
 
-This n8n workflow powers a customer support chatbot for **The Saffron Table**. It utilizes **Google Gemini** models to understand natural language and retrieves specific restaurant information (menus, hours, policies) from a **Supabase Vector Store**.
+This n8n workflow powers a customer support chatbot for **The Saffron Table**. It utilizes **Google Gemini** models to understand natural language and retrieves specific restaurant information (menus, hours, policies) from a **postgres Vector Store**.
 
 The workflow consists of two distinct operational pipelines:
-1.  **Knowledge Ingestion:** Fetches documents from Google Drive, creates embeddings, and stores them in Supabase.
+1.  **Knowledge Ingestion:** Fetches documents from Google Drive, creates embeddings, and stores them in postgres.
 2.  **Chat Interface:** A conversational agent that remembers context via Postgres and queries the vector store to provide accurate answers.
 
 ---
 
 ## Workflow Diagram
-<img width="1483" height="876" alt="image" src="https://github.com/user-attachments/assets/7ccfdc7d-8c15-4bcf-9fc4-1201e882bb71" />
+<img width="1920" height="1080" alt="Screenshot 2025-11-21 at 19 57 29" src="https://github.com/user-attachments/assets/4767fc13-c210-41b1-be53-697d510eb2d6" />
+
 
 ## Demo Preview
 <img width="1902" height="932" alt="image" src="https://github.com/user-attachments/assets/db84f180-5751-44c3-a318-3f83efd2f7fc" />
@@ -30,7 +31,7 @@ The workflow consists of two distinct operational pipelines:
 | :--- | :--- | :--- |
 | **1. AI Chat Agent** | Acts as the chatbot for the restaurant, processing user queries. | `@n8n/n8n-nodes-langchain.agent` |
 | **2. LLM Backend** | Powered by Google's **Gemini-2.5-flash-lite** model for fast, accurate responses. | `lmChatGoogleGemini` |
-| **3. RAG (Retrieval)** | Looks up relevant restaurant data from Supabase to answer queries. | `vectorStoreSupabase` (Retrieve as tool) |
+| **3. RAG (Retrieval)** | Looks up relevant restaurant data from Postgres Vectore Store to answer queries. | `vectorStorePostgres` (Retrieve as tool) |
 | **4. Conversation Memory** | Remembers previous messages in the session using a Postgres database. | `memoryPostgresChat` |
 | **5. Knowledge Ingestion** | Scans a specific Google Drive folder, downloads files, and processes them. | `googleDrive`, `Loop Over Items`, `Default Data Loader` |
 | **6. Vector Embeddings** | Converts document text into vectors using Gemini Embeddings. | `embeddingsGoogleGemini` |
@@ -52,7 +53,7 @@ You must set up the following credentials in n8n for the workflow to function:
 | Credential Name | Purpose |
 | :--- | :--- |
 | **Google Gemini(PaLM) Api account** | Used for the Chat Model and Embeddings. |
-| **Supabase Restaurant Account** | Used to store and retrieve vector data. |
+| **postgres Restaurant Account** | Used to store and retrieve vector data. |
 | **Google Drive account** | Used to access the knowledge base folder. |
 | **Postgres account** | Used for chat memory persistence. |
 
@@ -63,7 +64,7 @@ Before the chatbot can answer specific questions, you must populate the vector d
 3.  The workflow will:
     * Search the folder.
     * Loop through files and download them.
-    * Generate embeddings and insert them into the `documents` table in Supabase.
+    * Generate embeddings and insert them into the `documents` table in postgres.
 
 ### 4) Chat Interface
 The chat flow is triggered by the **When chat message received** node.
@@ -75,12 +76,12 @@ The chat flow is triggered by the **When chat message received** node.
 ## 🎯 Workflow Logic
 
 ### Ingestion Pipeline (Manual Trigger)
-`Manual Trigger` → `Search Drive` → `Loop` → `Download` → `Loader` → `Supabase Insert`
+`Manual Trigger` → `Search Drive` → `Loop` → `Download` → `Loader` → `postgres Insert`
 * *Purpose:* Keeps the AI's knowledge up to date with files from Google Drive.
 
 ### Chat Pipeline (Chat Trigger)
 `Chat Trigger` → `If (Input Exists)` → `AI Agent` → `Respond to Chat`
-* *Tools:* The Agent calls the **Supabase Vector Store** tool to look up context.
+* *Tools:* The Agent calls the **postgres Vector Store** tool to look up context.
 * *Memory:* The Agent uses **Postgres Chat Memory** (Window Length: 510) to maintain conversation history.
 
 ---
