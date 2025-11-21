@@ -58,7 +58,7 @@ You must set up the following credentials in n8n for the workflow to function:
 
 ### 3) Knowledge Base Setup (First Run)
 Before the chatbot can answer specific questions, you must populate the vector database:
-1.  Ensure your restaurant documents (PDFs, text files) are in the Google Drive folder with ID `1sfY0i-njfVLLvl63c7bNhgAsZ_TLxTxf` (or update the **Search files and folders** node with your own Folder ID).
+1.  Ensure your restaurant documents (PDFs, text files) are in the Google Drive folder with ID (or update the **Search files and folders** node with your own Folder ID).
 2.  Click **Execute Workflow** manually (or trigger the "When clicking ‘Execute workflow’" node).
 3.  The workflow will:
     * Search the folder.
