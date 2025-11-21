@@ -2,8 +2,7 @@
 
 **An intelligent, RAG-powered chatbot for "The Saffron Table" restaurant, capable of answering customer queries using knowledge stored in postgres.**
 
-* **Live Website:** [The Saffron Table](https://the-saffron-table.netlify.app/)
-
+[![LThe Saffron Table](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-blue?style=for-the-badge&logo=googleforms)](https://the-saffron-table.netlify.app/)
 ---
 
 ## 📖 Overview
